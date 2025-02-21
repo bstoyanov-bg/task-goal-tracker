@@ -4,7 +4,7 @@
 /backend/*.csproj.user
 /backend/.vs/
 /backend/*.log
-/backend/appsettings.Development.json  # Keep sensitive config out of Git
+/backend/appsettings.json
 
 # Angular / Node.js
 /frontend/node_modules/

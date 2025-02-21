@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using backend.Data;
 using backend.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class GoalsController : ControllerBase
