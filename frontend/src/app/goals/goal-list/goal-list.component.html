@@ -10,7 +10,7 @@
       <h1>Goals</h1>
       <div *ngIf="goals.length === 0 && !error">No goals yet.</div>
       <div *ngIf="error" class="error">{{ error }}</div>
-      <div>
+      <div class="goal-form">
         <mat-form-field>
           <input matInput [(ngModel)]="newGoalTitle" placeholder="Goal Title">
         </mat-form-field>

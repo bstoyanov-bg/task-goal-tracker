@@ -7,7 +7,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Goal } from '../../Models/Goal';
 
 @Component({
   selector: 'app-goal-list',
@@ -25,7 +24,7 @@ import { Goal } from '../../Models/Goal';
   styleUrls: ['./goal-list.component.scss']
 })
 export class GoalListComponent implements OnInit {
-  goals: Goal[] = [];
+  goals: any[] = [];
   error: string | null = null;
   newGoalTitle = '';
   newGoalDescription = '';
@@ -47,20 +46,27 @@ export class GoalListComponent implements OnInit {
   }
 
   createGoal(): void {
+    if (!this.newGoalTitle.trim()) {
+      this.error = 'Goal title is required.';
+      return;
+    }
     const goal = {
       id: 0,
       title: this.newGoalTitle,
       description: this.newGoalDescription,
-      tasks: [],
-      userId: ''
+      tasks: []
     };
     this.goalService.createGoal(goal).subscribe({
       next: (newGoal) => {
         this.goals.push(newGoal);
         this.newGoalTitle = '';
         this.newGoalDescription = '';
+        this.error = null;
       },
-      error: (err) => this.error = 'Failed to create goal.'
+      error: (err) => {
+        console.error('Failed to create goal:', err);
+        this.error = 'Failed to create goal.';
+      }
     });
   }
 }

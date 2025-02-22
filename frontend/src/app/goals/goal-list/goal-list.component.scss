@@ -1,13 +1,19 @@
 mat-sidenav-container {
     height: 100vh;
-}
-mat-sidenav {
+  }
+  mat-sidenav {
     width: 200px;
-}
-mat-form-field {
-    margin-right: 10px;
-}
-
-.error {
+  }
+  .error {
     color: red;
+    margin: 10px 0;
+  }
+  .goal-form {
+    margin: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  mat-form-field {
+    flex: 1;
   }

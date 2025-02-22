@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using backend.Data;
+﻿using backend.Data;
 using backend.Models;
 using Microsoft.AspNetCore.Authorization;
-
-namespace backend.Controllers;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 [Authorize]
 [ApiController]
@@ -17,23 +16,30 @@ public class GoalsController : ControllerBase
         _context = context;
     }
 
-    // GET: api/goals
     [HttpGet]
     public IActionResult GetGoals()
     {
-        var goals = _context.Goals.ToList();
+        var userId = User.Claims
+            .Where(c => c.Type == ClaimTypes.NameIdentifier)
+            .LastOrDefault(c => Guid.TryParse(c.Value, out _))?.Value;
+        var goals = _context.Goals.Where(g => g.UserId == userId).ToList();
         return Ok(goals);
     }
 
-    // POST: api/goals
     [HttpPost]
     public IActionResult CreateGoal([FromBody] GoalModel goal)
     {
-        if (goal == null || string.IsNullOrEmpty(goal.Title))
+        if (string.IsNullOrEmpty(goal.Title))
         {
             return BadRequest("Goal title is required.");
         }
-
+        var userId = User.FindFirst("id")?.Value;
+        Console.WriteLine($"UserId from custom id claim: {userId}");
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized("User not authenticated or no user ID found.");
+        }
+        goal.UserId = userId;
         _context.Goals.Add(goal);
         _context.SaveChanges();
         return CreatedAtAction(nameof(GetGoals), new { id = goal.Id }, goal);
