@@ -21,6 +21,8 @@ export class GoalService {
   getGoals(): Observable<Goal[]> {
       return this.http.get<Goal[]>(this.apiUrl, { headers: this.getHeaders() });
   }
-}
 
-// Add more methods (e.g., createGoal) for full CRUD.
+  createGoal(goal: Goal): Observable<Goal> {
+    return this.http.post<Goal>(this.apiUrl, goal, { headers: this.getHeaders() });
+  }
+}

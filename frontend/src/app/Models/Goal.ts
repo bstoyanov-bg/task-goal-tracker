@@ -1,4 +1,4 @@
-import { Task } from "./Task";
+import { Task } from '../Models/Task';
 
 export interface Goal {
     id: number;
