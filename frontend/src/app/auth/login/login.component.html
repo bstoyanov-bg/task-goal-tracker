@@ -1,1 +1,16 @@
-<p>login works!</p>
+<mat-card>
+    <mat-card-title>Login</mat-card-title>
+    <mat-card-content>
+        <mat-form-field>
+            <input matInput [(ngModel)]="email" placeholder="Email">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput [(ngModel)]="password" type="password" placeholder="Password">
+        </mat-form-field>
+        <div *ngIf="error" class="error">{{ error }}</div>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="login()">Login</button>
+        <a mat-button routerLink="/register">Register</a>
+    </mat-card-actions>
+</mat-card>
