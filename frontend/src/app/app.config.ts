@@ -1,21 +1,16 @@
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
-import { provideAnimations } from '@angular/platform-browser/animations'; // Required for Material
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-
-
+import { importProvidersFrom } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
+import { AuthGuard } from './auth/auth.guard';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), 
-    provideAnimations(),
+  providers: [
+    provideRouter(routes),
     provideHttpClient(),
-    importProvidersFrom([
-      MatCardModule,
-      MatFormFieldModule,
-      MatInputModule
-    ])]
+    importProvidersFrom(BrowserAnimationsModule),
+    AuthGuard
+  ]
 };

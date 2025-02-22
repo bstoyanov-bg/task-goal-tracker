@@ -1,1 +1,13 @@
-<p>goal-list works!</p>
+<mat-sidenav-container>
+    <mat-sidenav mode="side" opened>
+        <mat-list>
+            <mat-list-item *ngFor="let goal of goals">
+                {{ goal.title }}
+            </mat-list-item>
+        </mat-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <h1>Goals</h1>
+        <div *ngIf="goals.length === 0">No goals yet.</div>
+    </mat-sidenav-content>
+</mat-sidenav-container>
