@@ -29,11 +29,9 @@ public class TasksController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetTask(int id)
     {
-        var task = _context.Tasks.Find(id);
-        if (task == null)
-        {
-            return NotFound();
-        }
+        var userId = User.FindFirst("id")?.Value;
+        var task = _context.Tasks.FirstOrDefault(t => t.Id == id && t.Goal.UserId == userId);
+        if (task == null) return NotFound();
         return Ok(task);
     }
 
@@ -46,11 +44,11 @@ public class TasksController : ControllerBase
             return BadRequest("Task title and valid GoalId are required.");
         }
 
-        // Verify the Goal exists
-        var goal = _context.Goals.Find(task.GoalId);
+        var userId = User.FindFirst("id")?.Value;
+        var goal = _context.Goals.FirstOrDefault(g => g.Id == task.GoalId && g.UserId == userId);
         if (goal == null)
         {
-            return BadRequest("Invalid GoalId.");
+            return BadRequest("Invalid GoalId or unauthorized.");
         }
 
         _context.Tasks.Add(task);
@@ -67,7 +65,8 @@ public class TasksController : ControllerBase
             return BadRequest("Task ID mismatch.");
         }
 
-        var existingTask = _context.Tasks.Find(id);
+        var existingTask = _context.Tasks.FirstOrDefault(t => t.Id == id);
+
         if (existingTask == null)
         {
             return NotFound();
@@ -86,7 +85,7 @@ public class TasksController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult DeleteTask(int id)
     {
-        var task = _context.Tasks.Find(id);
+        var task = _context.Tasks.FirstOrDefault(g => g.Id == id);
         if (task == null)
         {
             return NotFound();

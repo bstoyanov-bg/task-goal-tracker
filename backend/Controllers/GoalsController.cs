@@ -19,9 +19,7 @@ public class GoalsController : ControllerBase
     [HttpGet]
     public IActionResult GetGoals()
     {
-        var userId = User.Claims
-            .Where(c => c.Type == ClaimTypes.NameIdentifier)
-            .LastOrDefault(c => Guid.TryParse(c.Value, out _))?.Value;
+        var userId = User.FindFirst("id")?.Value;
         var goals = _context.Goals.Where(g => g.UserId == userId).ToList();
         return Ok(goals);
     }
@@ -43,5 +41,42 @@ public class GoalsController : ControllerBase
         _context.Goals.Add(goal);
         _context.SaveChanges();
         return CreatedAtAction(nameof(GetGoals), new { id = goal.Id }, goal);
+    }
+
+    [HttpPut("{id}")]
+    public IActionResult UpdateGoal(int id, [FromBody] GoalModel goal)
+    {
+        if (id != goal.Id)
+        {
+            return BadRequest("ID mismatch.");
+        }
+
+        var userId = User.FindFirst("id")?.Value;
+        var existingGoal = _context.Goals.FirstOrDefault(g => g.Id == id && g.UserId == userId);
+
+        if (existingGoal == null)
+        {
+            return NotFound();
+        }
+
+        existingGoal.Title = goal.Title;
+        existingGoal.Description = goal.Description;
+        _context.SaveChanges();
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult DeleteGoal(int id)
+    {
+        var userId = User.FindFirst("id")?.Value;
+        var goal = _context.Goals.FirstOrDefault(g => g.Id == id && g.UserId == userId);
+        if (goal == null)
+        {
+            return NotFound();
+        }
+
+        _context.Goals.Remove(goal);
+        _context.SaveChanges();
+        return NoContent();
     }
 }
