@@ -28,6 +28,7 @@ export class GoalListComponent implements OnInit {
   error: string | null = null;
   newGoalTitle = '';
   newGoalDescription = '';
+  selectedGoal: any = null;
 
   constructor(private goalService: GoalService) { }
 
@@ -38,10 +39,7 @@ export class GoalListComponent implements OnInit {
   loadGoals(): void {
     this.goalService.getGoals().subscribe({
       next: (goals) => this.goals = goals,
-      error: (err) => {
-        console.error('Failed to fetch goals:', err);
-        this.error = 'Could not load goals. Check backend.';
-      }
+      error: (err) => this.error = 'Could not load goals: ' + err.message
     });
   }
 
@@ -50,12 +48,7 @@ export class GoalListComponent implements OnInit {
       this.error = 'Goal title is required.';
       return;
     }
-    const goal = {
-      id: 0,
-      title: this.newGoalTitle,
-      description: this.newGoalDescription,
-      tasks: []
-    };
+    const goal = { id: 0, title: this.newGoalTitle, description: this.newGoalDescription, tasks: [] };
     this.goalService.createGoal(goal).subscribe({
       next: (newGoal) => {
         this.goals.push(newGoal);
@@ -63,10 +56,38 @@ export class GoalListComponent implements OnInit {
         this.newGoalDescription = '';
         this.error = null;
       },
-      error: (err) => {
-        console.error('Failed to create goal:', err);
-        this.error = 'Failed to create goal.';
-      }
+      error: (err) => this.error = 'Failed to create goal: ' + err.message
+    });
+  }
+
+  selectGoal(goal: any): void {
+    this.selectedGoal = { ...goal };
+  }
+
+  updateGoal(): void {
+    if (!this.selectedGoal || !this.selectedGoal.title.trim()) {
+      this.error = 'Goal title is required.';
+      return;
+    }
+    this.goalService.updateGoal(this.selectedGoal).subscribe({
+      next: () => {
+        const index = this.goals.findIndex(g => g.id === this.selectedGoal.id);
+        this.goals[index] = { ...this.selectedGoal };
+        this.selectedGoal = null;
+        this.error = null;
+      },
+      error: (err) => this.error = 'Failed to update goal: ' + err.message
+    });
+  }
+
+  deleteGoal(id: number): void {
+    this.goalService.deleteGoal(id).subscribe({
+      next: () => {
+        this.goals = this.goals.filter(g => g.id !== id);
+        if (this.selectedGoal?.id === id) this.selectedGoal = null;
+        this.error = null;
+      },
+      error: (err) => this.error = 'Failed to delete goal: ' + err.message
     });
   }
 }

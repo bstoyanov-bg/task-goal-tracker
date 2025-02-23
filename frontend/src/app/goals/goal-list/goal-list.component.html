@@ -1,23 +1,34 @@
 <mat-sidenav-container>
-    <mat-sidenav mode="side" opened>
-      <mat-list>
-        <mat-list-item *ngFor="let goal of goals">
-          {{ goal.title }}
-        </mat-list-item>
-      </mat-list>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <h1>Goals</h1>
-      <div *ngIf="goals.length === 0 && !error">No goals yet.</div>
-      <div *ngIf="error" class="error">{{ error }}</div>
-      <div class="goal-form">
-        <mat-form-field>
-          <input matInput [(ngModel)]="newGoalTitle" placeholder="Goal Title">
-        </mat-form-field>
-        <mat-form-field>
-          <input matInput [(ngModel)]="newGoalDescription" placeholder="Description">
-        </mat-form-field>
-        <button mat-raised-button color="primary" (click)="createGoal()">Add Goal</button>
-      </div>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+  <mat-sidenav mode="side" opened>
+    <mat-list>
+      <mat-list-item *ngFor="let goal of goals" (click)="selectGoal(goal)" matListItemButton >
+        {{ goal.title }}
+      </mat-list-item>
+    </mat-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <h1>Goals</h1>
+    <div *ngIf="goals.length === 0 && !error">No goals yet.</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+    <div class="goal-form">
+      <mat-form-field>
+        <input matInput [(ngModel)]="newGoalTitle" placeholder="Goal Title">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput [(ngModel)]="newGoalDescription" placeholder="Description">
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="createGoal()">Add Goal</button>
+    </div>
+    <div *ngIf="selectedGoal" class="edit-section">
+      <h2>{{ selectedGoal.title }}</h2>
+      <mat-form-field>
+        <input matInput [(ngModel)]="selectedGoal.title" placeholder="Title">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput [(ngModel)]="selectedGoal.description" placeholder="Description">
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="updateGoal()">Save</button>
+      <button mat-raised-button color="warn" (click)="deleteGoal(selectedGoal.id)">Delete</button>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

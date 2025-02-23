@@ -1,19 +1,25 @@
 mat-sidenav-container {
-    height: 100vh;
-  }
-  mat-sidenav {
-    width: 200px;
-  }
-  .error {
-    color: red;
-    margin: 10px 0;
-  }
-  .goal-form {
-    margin: 20px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
-  mat-form-field {
-    flex: 1;
-  }
+  height: 100vh;
+}
+mat-sidenav {
+  width: 200px;
+}
+.error {
+  color: red;
+  margin: 10px 0;
+}
+.goal-form {
+  margin: 20px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.edit-section {
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+mat-form-field {
+  flex: 1;
+}

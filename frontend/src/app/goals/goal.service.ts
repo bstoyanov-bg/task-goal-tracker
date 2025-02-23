@@ -13,16 +13,25 @@ export class GoalService {
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   private getHeaders(): HttpHeaders {
-      return new HttpHeaders({
-          'Authorization': `Bearer ${this.authService.getToken()}`
-      });
+    return new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`,
+      'Content-Type': 'application/json'
+    });
   }
 
   getGoals(): Observable<Goal[]> {
-      return this.http.get<Goal[]>(this.apiUrl, { headers: this.getHeaders() });
+    return this.http.get<Goal[]>(this.apiUrl, { headers: this.getHeaders() });
   }
 
   createGoal(goal: Goal): Observable<Goal> {
     return this.http.post<Goal>(this.apiUrl, goal, { headers: this.getHeaders() });
+  }
+
+  updateGoal(goal: Goal): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${goal.id}`, goal, { headers: this.getHeaders() });
+  }
+
+  deleteGoal(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
   }
 }
