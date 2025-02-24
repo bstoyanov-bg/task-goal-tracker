@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { TaskService } from '../../tasks/task.service';
 
 @Component({
   selector: 'app-goal-list',
@@ -29,8 +30,9 @@ export class GoalListComponent implements OnInit {
   newGoalTitle = '';
   newGoalDescription = '';
   selectedGoal: any = null;
+  newTaskTitle = '';
 
-  constructor(private goalService: GoalService) { }
+  constructor(private goalService: GoalService, private taskService: TaskService) { }
 
   ngOnInit(): void {
     this.loadGoals();
@@ -38,7 +40,9 @@ export class GoalListComponent implements OnInit {
 
   loadGoals(): void {
     this.goalService.getGoals().subscribe({
-      next: (goals) => this.goals = goals,
+      next: (goals) => {
+        this.goals = goals;
+      },
       error: (err) => this.error = 'Could not load goals: ' + err.message
     });
   }
@@ -88,6 +92,31 @@ export class GoalListComponent implements OnInit {
         this.error = null;
       },
       error: (err) => this.error = 'Failed to delete goal: ' + err.message
+    });
+  }
+
+  createTask(): void {
+    if (!this.selectedGoal || !this.newTaskTitle.trim()) {
+      this.error = 'Select a goal and enter a task title.';
+      return;
+    }
+    const task = {
+      id: 0,
+      title: this.newTaskTitle,
+      isCompleted: false,
+      dueDate: new Date(),
+      goalId: this.selectedGoal.id
+    };
+    this.taskService.createTask(task).subscribe({
+      next: (newTask) => {
+        if (!this.selectedGoal.tasks) this.selectedGoal.tasks = [];
+        this.selectedGoal.tasks.push(newTask);
+        this.newTaskTitle = '';
+        this.error = null;
+      },
+      error: (err) => {
+        this.error = 'Failed to create task: ' + err.message;
+      }
     });
   }
 }

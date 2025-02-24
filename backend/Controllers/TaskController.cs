@@ -29,7 +29,7 @@ public class TasksController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetTask(int id)
     {
-        var userId = User.FindFirst("id")?.Value;
+        var userId = User.FindFirst("id")?.Value ?? User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
         var task = _context.Tasks.FirstOrDefault(t => t.Id == id && t.Goal.UserId == userId);
         if (task == null) return NotFound();
         return Ok(task);
@@ -37,23 +37,24 @@ public class TasksController : ControllerBase
 
     // POST: api/tasks
     [HttpPost]
+    [HttpPost]
     public IActionResult CreateTask([FromBody] TaskModel task)
     {
-        if (task == null || string.IsNullOrEmpty(task.Title) || task.GoalId <= 0)
+        if (string.IsNullOrEmpty(task.Title))
         {
-            return BadRequest("Task title and valid GoalId are required.");
+            return BadRequest("Task title is required.");
         }
-
-        var userId = User.FindFirst("id")?.Value;
+        // Use "id" claim instead of NameIdentifier
+        var userId = User.FindFirst("id")?.Value ?? User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
         var goal = _context.Goals.FirstOrDefault(g => g.Id == task.GoalId && g.UserId == userId);
         if (goal == null)
         {
+            var allGoals = _context.Goals.Where(g => g.UserId == userId).ToList();
             return BadRequest("Invalid GoalId or unauthorized.");
         }
-
         _context.Tasks.Add(task);
         _context.SaveChanges();
-        return CreatedAtAction(nameof(GetTask), new { id = task.Id }, task);
+        return StatusCode(201, new { task.Id, task.Title, task.IsCompleted, task.GoalId });
     }
 
     // PUT: api/tasks/{id}
