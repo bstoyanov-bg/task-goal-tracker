@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import { TaskService } from '../../tasks/task.service';
 
 @Component({
@@ -19,6 +20,7 @@ import { TaskService } from '../../tasks/task.service';
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
+    MatCheckboxModule,
     FormsModule
   ],
   templateUrl: './goal-list.component.html',
@@ -109,14 +111,41 @@ export class GoalListComponent implements OnInit {
     };
     this.taskService.createTask(task).subscribe({
       next: (newTask) => {
+        console.log('Task created:', newTask);
         if (!this.selectedGoal.tasks) this.selectedGoal.tasks = [];
         this.selectedGoal.tasks.push(newTask);
         this.newTaskTitle = '';
         this.error = null;
       },
       error: (err) => {
+        console.error('Task creation error:', err);
         this.error = 'Failed to create task: ' + err.message;
       }
     });
+  }
+
+  toggleTaskCompletion(task: any): void {
+    task.isCompleted = !task.isCompleted;
+    this.taskService.updateTask(task).subscribe({
+      next: () => console.log('Task updated:', task),
+      error: (err) => this.error = 'Failed to update task: ' + err.message
+    });
+  }
+
+  deleteTask(id: number): void {
+    this.taskService.deleteTask(id).subscribe({
+      next: () => {
+        if (this.selectedGoal && this.selectedGoal.tasks) {
+          this.selectedGoal.tasks = this.selectedGoal.tasks.filter((t: { id: number; }) => t.id !== id);
+        }
+      },
+      error: (err) => this.error = 'Failed to delete task: ' + err.message
+    });
+  }
+
+  getProgress(goal: any): number {
+    if (!goal.tasks || goal.tasks.length === 0) return 0;
+    const completed = goal.tasks.filter((t: { isCompleted: any; }) => t.isCompleted).length;
+    return (completed / goal.tasks.length) * 100;
   }
 }

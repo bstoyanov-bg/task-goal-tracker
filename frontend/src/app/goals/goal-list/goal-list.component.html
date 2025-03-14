@@ -29,15 +29,21 @@
       </mat-form-field>
       <button mat-raised-button color="primary" (click)="updateGoal()">Save</button>
       <button mat-raised-button color="warn" (click)="deleteGoal(selectedGoal.id)">Delete</button>
-      <h3>Tasks</h3>
+      <h3>Tasks (Progress: {{ getProgress(selectedGoal) | number:'1.0-0' }}%)</h3>
       <div *ngIf="selectedGoal.tasks?.length === 0">No tasks yet.</div>
       <ul>
-        <li *ngFor="let task of selectedGoal.tasks">{{ task.title }}</li>
+        <li *ngFor="let task of selectedGoal.tasks">
+          <mat-checkbox [(ngModel)]="task.isCompleted" (change)="toggleTaskCompletion(task)">
+            {{ task.title }}
+          </mat-checkbox>
+          <button mat-button color="warn" (click)="deleteTask(task.id)">Delete</button>
+        </li>
       </ul>
       <mat-form-field>
         <input matInput [(ngModel)]="newTaskTitle" placeholder="New Task">
       </mat-form-field>
       <button mat-raised-button color="primary" (click)="createTask()">Add Task</button>
     </div>
+
   </mat-sidenav-content>
 </mat-sidenav-container>

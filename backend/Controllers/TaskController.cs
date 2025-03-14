@@ -37,7 +37,6 @@ public class TasksController : ControllerBase
 
     // POST: api/tasks
     [HttpPost]
-    [HttpPost]
     public IActionResult CreateTask([FromBody] TaskModel task)
     {
         if (string.IsNullOrEmpty(task.Title))
@@ -65,8 +64,8 @@ public class TasksController : ControllerBase
         {
             return BadRequest("Task ID mismatch.");
         }
-
-        var existingTask = _context.Tasks.FirstOrDefault(t => t.Id == id);
+        var userId = User.FindFirst("id")?.Value;
+        var existingTask = _context.Tasks.FirstOrDefault(t => t.Id == id && t.Goal.UserId == userId);
 
         if (existingTask == null)
         {
@@ -86,7 +85,8 @@ public class TasksController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult DeleteTask(int id)
     {
-        var task = _context.Tasks.FirstOrDefault(g => g.Id == id);
+        var userId = User.FindFirst("id")?.Value;
+        var task = _context.Tasks.FirstOrDefault(t => t.Id == id && t.Goal.UserId == userId);
         if (task == null)
         {
             return NotFound();

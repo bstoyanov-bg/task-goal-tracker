@@ -2,6 +2,7 @@
 using backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 [Authorize]
@@ -20,7 +21,10 @@ public class GoalsController : ControllerBase
     public IActionResult GetGoals()
     {
         var userId = User.FindFirst("id")?.Value;
-        var goals = _context.Goals.Where(g => g.UserId == userId).ToList();
+        var goals = _context.Goals
+            .Where(g => g.UserId == userId)
+            .Include(g => g.Tasks)
+            .ToList();
         return Ok(goals);
     }
 
