@@ -17,7 +17,6 @@ public class TasksController : ControllerBase
         _context = context;
     }
 
-    // GET: api/tasks
     [HttpGet]
     public IActionResult GetTasks()
     {
@@ -25,17 +24,15 @@ public class TasksController : ControllerBase
         return Ok(tasks);
     }
 
-    // GET: api/tasks/{id}
     [HttpGet("{id}")]
     public IActionResult GetTask(int id)
     {
-        var userId = User.FindFirst("id")?.Value ?? User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+        var userId = User.FindFirst("id")?.Value;
         var task = _context.Tasks.FirstOrDefault(t => t.Id == id && t.Goal.UserId == userId);
         if (task == null) return NotFound();
         return Ok(task);
     }
 
-    // POST: api/tasks
     [HttpPost]
     public IActionResult CreateTask([FromBody] TaskModel task)
     {
@@ -43,8 +40,7 @@ public class TasksController : ControllerBase
         {
             return BadRequest("Task title is required.");
         }
-        // Use "id" claim instead of NameIdentifier
-        var userId = User.FindFirst("id")?.Value ?? User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+        var userId = User.FindFirst("id")?.Value;
         var goal = _context.Goals.FirstOrDefault(g => g.Id == task.GoalId && g.UserId == userId);
         if (goal == null)
         {
@@ -56,7 +52,6 @@ public class TasksController : ControllerBase
         return StatusCode(201, new { task.Id, task.Title, task.IsCompleted, task.GoalId });
     }
 
-    // PUT: api/tasks/{id}
     [HttpPut("{id}")]
     public IActionResult UpdateTask(int id, [FromBody] TaskModel task)
     {
@@ -81,7 +76,6 @@ public class TasksController : ControllerBase
         return NoContent();
     }
 
-    // DELETE: api/tasks/{id}
     [HttpDelete("{id}")]
     public IActionResult DeleteTask(int id)
     {

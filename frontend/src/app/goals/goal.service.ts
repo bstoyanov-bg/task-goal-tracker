@@ -20,6 +20,7 @@ export class GoalService {
   }
 
   getGoals(): Observable<Goal[]> {
+    console.log('Authorization', this.authService.getToken());
     return this.http.get<Goal[]>(this.apiUrl, { headers: this.getHeaders() });
   }
 
