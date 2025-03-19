@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -17,22 +17,41 @@ import { CommonModule } from '@angular/common';
     MatCardModule,
     MatButtonModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    ReactiveFormsModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  email: string = '';
-  password: string = '';
-  error: string = '';
+  loginForm: FormGroup;
+  error: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private fb: FormBuilder
+  ) {
+    this.loginForm = this.fb.group({
+      email: [''],
+      password: ['']
+    });
+  }
 
-  login() {
-    this.authService.login(this.email, this.password).subscribe({
-      next: () => this.router.navigate(['/goals']),
-      error: (err) => this.error = 'Login failed',
+  login(): void {
+    const { email, password } = this.loginForm.value;
+    if (!email || !password) {
+      this.error = 'Please enter email and password.';
+      return;
+    }
+    this.authService.login(email, password).subscribe({
+      next: (response) => {
+        localStorage.setItem('auth_token', response.token);
+        this.router.navigate(['/goals']);
+      },
+      error: (err) => {
+        this.error = 'Login failed: ' + (err.error?.message || 'Unknown error');
+      }
     });
   }
 }

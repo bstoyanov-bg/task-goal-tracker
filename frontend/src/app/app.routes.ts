@@ -10,7 +10,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'goals', component: GoalListComponent },
   { path: 'goals', component: GoalListComponent, canActivate: [AuthGuard] },
-  { path: '', redirectTo: '/goals', pathMatch: 'full' }
+  { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];
 
 @NgModule({
