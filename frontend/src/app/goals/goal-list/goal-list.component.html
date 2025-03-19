@@ -1,3 +1,10 @@
+<mat-toolbar color="primary">
+  <span>Task Tracker</span>
+  <span class="spacer"></span>
+  <span class="logged-user" *ngIf="userEmail">Logged in as: {{ userEmail }}</span>
+  <button mat-button *ngIf="userEmail" (click)="logout()">Logout</button>
+</mat-toolbar>
+
 <mat-sidenav-container>
   <mat-sidenav mode="side" opened>
     <mat-list>

@@ -6,9 +6,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { CommonModule } from '@angular/common';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { TaskService } from '../../tasks/task.service';
+import { Router } from '@angular/router';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-goal-list',
@@ -21,7 +24,8 @@ import { TaskService } from '../../tasks/task.service';
     MatInputModule,
     MatFormFieldModule,
     MatCheckboxModule,
-    FormsModule
+    FormsModule,
+    MatToolbarModule
   ],
   templateUrl: './goal-list.component.html',
   styleUrls: ['./goal-list.component.scss']
@@ -33,10 +37,16 @@ export class GoalListComponent implements OnInit {
   newGoalDescription = '';
   selectedGoal: any = null;
   newTaskTitle = '';
+  userEmail: string | null = null;
 
-  constructor(private goalService: GoalService, private taskService: TaskService) { }
+  constructor(
+    private goalService: GoalService, 
+    private taskService: TaskService,
+    private authService: AuthService,
+    private router: Router) { }
 
   ngOnInit(): void {
+    this.userEmail = this.authService.getUserEmail();
     this.loadGoals();
   }
 
@@ -147,5 +157,10 @@ export class GoalListComponent implements OnInit {
     if (!goal.tasks || goal.tasks.length === 0) return 0;
     const completed = goal.tasks.filter((t: { isCompleted: any; }) => t.isCompleted).length;
     return (completed / goal.tasks.length) * 100;
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
