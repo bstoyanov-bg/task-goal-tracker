@@ -14,7 +14,7 @@
     </mat-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <h1>Goals</h1>
+    <h1>Create new Goal</h1>
     <div *ngIf="goals.length === 0 && !error">No goals yet.</div>
     <div *ngIf="error" class="error">{{ error }}</div>
     <div class="goal-form">
@@ -22,7 +22,7 @@
         <input matInput [(ngModel)]="newGoalTitle" placeholder="Goal Title">
       </mat-form-field>
       <mat-form-field>
-        <input matInput [(ngModel)]="newGoalDescription" placeholder="Description">
+        <input matInput [(ngModel)]="newGoalDescription" type="textarea" rows="9" placeholder="Description">
       </mat-form-field>
       <button mat-raised-button color="primary" (click)="createGoal()">Add Goal</button>
     </div>
@@ -34,8 +34,10 @@
       <mat-form-field>
         <input matInput [(ngModel)]="selectedGoal.description" placeholder="Description">
       </mat-form-field>
-      <button mat-raised-button color="primary" (click)="updateGoal()">Save</button>
-      <button mat-raised-button color="warn" (click)="deleteGoal(selectedGoal.id)">Delete</button>
+      <div class="button-group">
+        <button mat-raised-button color="primary" (click)="updateGoal()">Save</button>
+        <button mat-raised-button color="warn" (click)="deleteGoal(selectedGoal.id)">Delete</button>
+      </div>
       <h3>Tasks (Progress: {{ getProgress(selectedGoal) | number:'1.0-0' }}%)</h3>
       <div *ngIf="selectedGoal.tasks?.length === 0">No tasks yet.</div>
       <ul>

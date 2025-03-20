@@ -34,6 +34,14 @@ mat-toolbar {
 .logged-user {
   font-size: 15px;
 }
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+.button-group button[mat-raised-button] {
+  min-width: 80px;
+  width: auto;
+}
 
 .progress {
   margin: 10px 0;
