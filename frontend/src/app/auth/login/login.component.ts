@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,7 +18,8 @@ import { CommonModule } from '@angular/common';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterLink
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -50,10 +51,8 @@ export class LoginComponent {
         this.router.navigate(['/goals']);
       },
       error: (err) => {
-        this.error = 'Login failed: ' + (err.error?.message || 'Unknown error');
+        this.error = 'Login failed: ' + (err.error?.message || 'Email or\\and password are invalid!');
       }
     });
   }
 }
-
-//Could use reactive forms for validation
