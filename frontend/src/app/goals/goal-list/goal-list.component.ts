@@ -9,13 +9,11 @@ import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { CommonModule } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { TaskService } from '../../tasks/task.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Goal } from '../../Models/Goal';
 import { Subscription } from 'rxjs';
-import { Task } from '../../Models/Task';
 import { GoalDetailComponent } from '../goal-detail/goal-detail.component';
 
 @Component({
@@ -50,7 +48,6 @@ export class GoalListComponent implements OnInit, OnDestroy {
 
   constructor(
     private goalService: GoalService, 
-    private taskService: TaskService,
     private authService: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef) { }

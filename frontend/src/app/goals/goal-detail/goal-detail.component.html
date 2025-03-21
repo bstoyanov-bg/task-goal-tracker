@@ -18,7 +18,7 @@
       </div>
       <div *ngIf="goal.tasks?.length === 0">No tasks yet.</div>
       <ul>
-        <app-task-item *ngFor="let task of goal.tasks" [task]="task" (update)="taskChange.emit()" (delete)="taskChange.emit()"></app-task-item>
+        <app-task-item *ngFor="let task of goal.tasks" [task]="task" (update)="taskChange.emit()" (delete)="onTaskDelete($event)"></app-task-item>
       </ul>
       <mat-form-field>
         <input matInput [(ngModel)]="newTaskTitle" placeholder="New Task">

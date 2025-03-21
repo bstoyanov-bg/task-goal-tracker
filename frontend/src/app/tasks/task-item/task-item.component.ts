@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
 export class TaskItemComponent {
   @Input() task: any;
   @Output() update = new EventEmitter<void>();
-  @Output() delete = new EventEmitter<void>();
+  @Output() delete = new EventEmitter<number>();
 
   constructor(private taskService: TaskService) { }
 
@@ -33,7 +33,7 @@ export class TaskItemComponent {
 
   deleteTask(): void {
     this.taskService.deleteTask(this.task.id).subscribe({
-      next: () => this.delete.emit(),
+      next: () => this.delete.emit(this.task.id),
       error: (err) => console.error('Failed to delete task:', err)
     });
   }

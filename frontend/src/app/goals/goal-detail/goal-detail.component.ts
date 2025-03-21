@@ -72,6 +72,12 @@ export class GoalDetailComponent {
     });
   }
 
+  onTaskDelete(taskId: number): void {
+    this.goal.tasks = this.goal.tasks.filter((t: { id: number; }) => t.id !== taskId); // Remove locally
+    this.taskChange.emit(); // Notify parent
+    this.cdr.detectChanges(); // Force UI update
+  }
+
   getProgress(): number {
     if (!this.goal.tasks || this.goal.tasks.length === 0) return 0;
     const completed = this.goal.tasks.filter((t: { isCompleted: any; }) => t.isCompleted).length;
