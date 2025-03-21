@@ -1,1 +1,29 @@
-<p>goal-detail works!</p>
+<div class="goal-detail" *ngIf="goal">
+    <h2>{{ goal.title }}</h2>
+    <mat-form-field>
+      <input matInput [(ngModel)]="goal.title" placeholder="Title">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [(ngModel)]="goal.description" placeholder="Description">
+    </mat-form-field>
+    <div class="button-group">
+      <button mat-raised-button color="primary" (click)="saveGoal()">Save</button>
+      <button mat-raised-button color="warn" (click)="deleteGoal()">Delete</button>
+    </div>
+    <div class="tasks-section">
+      <h3>Tasks</h3>
+      <div class="progress-container">
+        <span>Progress: {{ getProgress() | number:'1.0-0' }}%</span>
+        <mat-progress-bar mode="determinate" [value]="getProgress()"></mat-progress-bar>
+      </div>
+      <div *ngIf="goal.tasks?.length === 0">No tasks yet.</div>
+      <ul>
+        <app-task-item *ngFor="let task of goal.tasks" [task]="task" (update)="taskChange.emit()" (delete)="taskChange.emit()"></app-task-item>
+      </ul>
+      <mat-form-field>
+        <input matInput [(ngModel)]="newTaskTitle" placeholder="New Task">
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="createTask()">Add Task</button>
+      <div *ngIf="error" class="error">{{ error }}</div>
+    </div>
+  </div>

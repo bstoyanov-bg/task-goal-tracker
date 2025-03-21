@@ -16,6 +16,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Goal } from '../../Models/Goal';
 import { Subscription } from 'rxjs';
 import { Task } from '../../Models/Task';
+import { GoalDetailComponent } from '../goal-detail/goal-detail.component';
 
 @Component({
   selector: 'app-goal-list',
@@ -30,7 +31,8 @@ import { Task } from '../../Models/Task';
     MatCheckboxModule,
     FormsModule,
     MatToolbarModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    GoalDetailComponent
   ],
   templateUrl: './goal-list.component.html',
   styleUrls: ['./goal-list.component.scss']
@@ -73,6 +75,11 @@ export class GoalListComponent implements OnInit, OnDestroy {
     });
   }
 
+  selectGoal(goal: any): void {
+    this.selectedGoal = { ...goal };
+    this.cdr.detectChanges();
+  }
+  
   createGoal(): void {
     if (!this.newGoalTitle.trim()) {
       this.error = 'Goal title is required.';
@@ -90,22 +97,9 @@ export class GoalListComponent implements OnInit, OnDestroy {
     });
   }
 
-  selectGoal(goal: Goal): void {
-    this.selectedGoal = { ...goal };
-  }
-
-  updateGoal(): void {
-    if (!this.selectedGoal || !this.selectedGoal.title.trim()) {
-      this.error = 'Goal title is required.';
-      return;
-    }
-    this.goalService.updateGoal(this.selectedGoal).subscribe({
-      next: () => {
-        const index = this.goals.findIndex(g => g.id === this.selectedGoal.id);
-        this.goals[index] = { ...this.selectedGoal };
-        this.selectedGoal = null;
-        this.error = null;
-      },
+  updateGoal(goal: any): void {
+    this.goalService.updateGoal(goal).subscribe({
+      next: () => this.loadGoals(),
       error: (err) => this.error = 'Failed to update goal: ' + err.message
     });
   }
@@ -114,81 +108,14 @@ export class GoalListComponent implements OnInit, OnDestroy {
     this.goalService.deleteGoal(id).subscribe({
       next: () => {
         this.goals = this.goals.filter(g => g.id !== id);
-        if (this.selectedGoal?.id === id) this.selectedGoal = null;
-        this.error = null;
+        this.selectedGoal = null;
       },
       error: (err) => this.error = 'Failed to delete goal: ' + err.message
     });
   }
 
-  createTask(): void {
-    if (!this.selectedGoal || !this.newTaskTitle.trim()) {
-      this.error = 'Select a goal and enter a task title.';
-      return;
-    }
-    const task = {
-      id: 0,
-      title: this.newTaskTitle,
-      isCompleted: false,
-      dueDate: new Date(),
-      goalId: this.selectedGoal.id
-    };
-    this.taskService.createTask(task).subscribe({
-      next: (newTask) => {
-        if (!this.selectedGoal.tasks) this.selectedGoal.tasks = [];
-        this.selectedGoal.tasks.push(newTask);
-        this.newTaskTitle = '';
-        this.error = null;
-      },
-      error: (err) => {
-        this.error = 'Failed to create task: ' + err.message;
-      }
-    });
-  }
-
-  toggleTaskCompletion(task: Task): void {
-    // Toggle explicitly
-    task.isCompleted = !task.isCompleted;
-  
-    const taskIndex = this.selectedGoal.tasks.findIndex((t: Task) => t.id === task.id);
-    if (taskIndex !== -1) {
-      this.selectedGoal.tasks[taskIndex] = { ...task }; // Update with toggled state
-      this.selectedGoal = { ...this.selectedGoal, tasks: [...this.selectedGoal.tasks] }; // New reference
-      this.cdr.detectChanges();
-    }
-  
-    this.taskService.updateTask(task).subscribe({
-      next: () => {
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        task.isCompleted = !task.isCompleted; // Rollback
-        const rollbackIndex = this.selectedGoal.tasks.findIndex((t: Task) => t.id === task.id);
-        if (rollbackIndex !== -1) {
-          this.selectedGoal.tasks[rollbackIndex] = { ...task };
-          this.selectedGoal = { ...this.selectedGoal, tasks: [...this.selectedGoal.tasks] };
-        }
-        this.error = 'Failed to update task: ' + err.message;
-        this.cdr.detectChanges();
-      }
-    });
-  }
-
-  deleteTask(id: number): void {
-    this.taskService.deleteTask(id).subscribe({
-      next: () => {
-        if (this.selectedGoal && this.selectedGoal.tasks) {
-          this.selectedGoal.tasks = this.selectedGoal.tasks.filter((t: { id: number; }) => t.id !== id);
-        }
-      },
-      error: (err) => this.error = 'Failed to delete task: ' + err.message
-    });
-  }
-
-  getProgress(goal: Goal): number {
-    if (!goal.tasks || goal.tasks.length === 0) return 0;
-    const completed = goal.tasks.filter((t: { isCompleted: boolean; }) => t.isCompleted).length;
-    return (completed / goal.tasks.length) * 100;
+  refreshTasks(): void {
+    this.loadGoals(); // Reload to reflect task changes
   }
 
   logout(): void {

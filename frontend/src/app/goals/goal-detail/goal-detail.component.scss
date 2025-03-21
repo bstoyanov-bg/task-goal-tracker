@@ -1,0 +1,35 @@
+.goal-detail {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  mat-form-field {
+    width: 100%;
+  }
+  .button-group {
+    display: flex;
+    gap: 10px;
+  }
+  .button-group button[mat-raised-button] {
+    min-width: 80px;
+    width: auto;
+    padding: 0 16px;
+  }
+  .error {
+    color: red;
+    margin: 10px 0;
+  }
+  .tasks-section {
+    margin-top: 20px;
+  }
+  .progress-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  mat-progress-bar {
+    flex: 1;
+    height: 10px;
+  }
