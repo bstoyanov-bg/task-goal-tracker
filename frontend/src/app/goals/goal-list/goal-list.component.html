@@ -39,10 +39,11 @@
         <button mat-raised-button color="warn" (click)="deleteGoal(selectedGoal.id)">Delete</button>
       </div>
       <h3>Tasks (Progress: {{ getProgress(selectedGoal) | number:'1.0-0' }}%)</h3>
+      <mat-progress-bar mode="determinate" [value]="getProgress(selectedGoal)"></mat-progress-bar>
       <div *ngIf="selectedGoal.tasks?.length === 0">No tasks yet.</div>
       <ul>
         <li *ngFor="let task of selectedGoal.tasks">
-          <mat-checkbox [(ngModel)]="task.isCompleted" (change)="toggleTaskCompletion(task)">
+          <mat-checkbox [checked]="task.isCompleted" (change)="toggleTaskCompletion(task)">
             {{ task.title }}
           </mat-checkbox>
           <button mat-button color="warn" (click)="deleteTask(task.id)">Delete</button>

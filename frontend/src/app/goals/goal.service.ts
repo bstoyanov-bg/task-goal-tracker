@@ -24,6 +24,10 @@ export class GoalService {
     return this.http.get<Goal[]>(this.apiUrl, { headers: this.getHeaders() });
   }
 
+  getGoalById(id: number): Observable<Goal[]> {
+    return this.http.get<Goal[]>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+  }
+
   createGoal(goal: Goal): Observable<Goal> {
     return this.http.post<Goal>(this.apiUrl, goal, { headers: this.getHeaders() });
   }
