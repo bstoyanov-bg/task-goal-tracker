@@ -40,16 +40,19 @@ public class TasksController : ControllerBase
         {
             return BadRequest("Task title is required.");
         }
+
         var userId = User.FindFirst("id")?.Value;
         var goal = _context.Goals.FirstOrDefault(g => g.Id == task.GoalId && g.UserId == userId);
+
         if (goal == null)
         {
-            var allGoals = _context.Goals.Where(g => g.UserId == userId).ToList();
+            //var allGoals = _context.Goals.Where(g => g.UserId == userId).ToList();
             return BadRequest("Invalid GoalId or unauthorized.");
         }
+
         _context.Tasks.Add(task);
         _context.SaveChanges();
-        return StatusCode(201, new { task.Id, task.Title, task.IsCompleted, task.GoalId });
+        return StatusCode(201, new { task.Id, task.Title, task.IsCompleted, task.GoalId, task.DueDate });
     }
 
     [HttpPut("{id}")]
@@ -71,6 +74,7 @@ public class TasksController : ControllerBase
         existingTask.IsCompleted = task.IsCompleted;
         existingTask.DueDate = task.DueDate;
         existingTask.GoalId = task.GoalId;
+        existingTask.DueDate = task.DueDate;
 
         _context.SaveChanges();
         return NoContent();

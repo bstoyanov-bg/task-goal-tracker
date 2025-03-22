@@ -9,6 +9,8 @@ import { TaskItemComponent } from '../../tasks/task-item/task-item.component';
 import { TaskService } from '../../tasks/task.service';
 import { Goal } from '../../Models/Goal';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatNativeDateModule } from '@angular/material/core';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-goal-detail',
@@ -20,6 +22,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatButtonModule,
     MatCheckboxModule,
     MatProgressBarModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     FormsModule,
     TaskItemComponent
   ],
@@ -32,6 +36,7 @@ export class GoalDetailComponent {
   @Output() delete = new EventEmitter<number>();
   @Output() taskChange = new EventEmitter<void>(); // Notify parent of task changes
   newTaskTitle: string = '';
+  newTaskDueDate: Date | null = null;
   error: string | null = null;
 
   constructor(
@@ -57,13 +62,15 @@ export class GoalDetailComponent {
       title: this.newTaskTitle,
       isCompleted: false,
       goalId: this.goal.id,
-      dueDate: new Date(),
+      // dueDate: String(new Date()),
+      dueDate: this.newTaskDueDate ? this.newTaskDueDate.toISOString() : null,
     };
     this.taskService.createTask(task).subscribe({
       next: (newTask) => {
         if (!this.goal.tasks) this.goal.tasks = [];
         this.goal.tasks.push(newTask);
         this.newTaskTitle = '';
+        this.newTaskDueDate = null;
         this.error = null;
         this.taskChange.emit();
         this.cdr.detectChanges();

@@ -6,12 +6,19 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
 import { AuthGuard } from './auth/auth.guard';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideHttpClient(),
-    importProvidersFrom(BrowserAnimationsModule, MatToolbarModule),
-    AuthGuard
-  ]
+    importProvidersFrom(
+      BrowserAnimationsModule,
+      MatToolbarModule,
+      MatDatepickerModule,
+      MatNativeDateModule
+    ),
+    AuthGuard,
+  ],
 };
