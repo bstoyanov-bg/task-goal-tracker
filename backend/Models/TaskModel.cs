@@ -8,5 +8,6 @@
         public DateTime? DueDate { get; set; }
         public int GoalId { get; set; }
         public GoalModel? Goal { get; set; }
+        public string Priority { get; set; } = "Medium";
     }
 }
