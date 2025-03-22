@@ -1,11 +1,56 @@
 li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 5px 0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  transition: background-color 0.2s;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
+.task-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
 }
 .due-date {
   font-size: 0.9em;
   color: #666;
   margin-left: 10px;
+}
+.action-buttons {
+  display: flex;
+  gap: 5px;
+}
+.task-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  flex: 1;
+  padding: 15px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.edit-field {
+  width: 100%;
+  max-width: 300px;
+}
+.edit-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.edit-task-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+}
+mat-icon {
+  font-size: 20px;
 }

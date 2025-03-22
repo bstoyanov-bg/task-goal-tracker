@@ -8,6 +8,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,7 +18,8 @@ export const appConfig: ApplicationConfig = {
       BrowserAnimationsModule,
       MatToolbarModule,
       MatDatepickerModule,
-      MatNativeDateModule
+      MatNativeDateModule,
+      MatIconModule,
     ),
     AuthGuard,
   ],
