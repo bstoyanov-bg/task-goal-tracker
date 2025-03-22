@@ -3,6 +3,7 @@
     <mat-checkbox [(ngModel)]="task.isCompleted" (change)="toggleTask()">
       {{ task.title }}
       <span *ngIf="task.dueDate" class="due-date">Due: {{ task.dueDate | date }}</span>
+      <span class="priority">({{ task.priority }})</span>
     </mat-checkbox>
     <div class="action-buttons">
       <button mat-icon-button (click)="startEditing()" matTooltip="Edit">
@@ -24,7 +25,15 @@
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
-    <div class="edit-task-buttons">
+    <mat-form-field appearance="outline" class="edit-field">
+      <mat-label>Priority</mat-label>
+      <mat-select [(ngModel)]="editedPriority">
+        <mat-option *ngFor="let priority of priorityOptions" [value]="priority">
+          {{ priority }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="edit-buttons">
       <button mat-raised-button color="primary" (click)="saveTask()">Save</button>
       <button mat-raised-button (click)="cancelEditing()">Cancel</button>
     </div>

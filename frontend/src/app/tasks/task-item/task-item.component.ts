@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -22,6 +23,7 @@ import { CommonModule } from '@angular/common';
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
+    MatSelectModule,
     FormsModule
   ],
   templateUrl: './task-item.component.html',
@@ -34,6 +36,8 @@ export class TaskItemComponent {
   isEditing = false;
   editedTitle: string = '';
   editedDueDate: Date | null = null;
+  editedPriority: string = 'Medium';
+  priorityOptions = ['Low', 'Medium', 'High'];
 
   constructor(
     private taskService: TaskService,
@@ -49,8 +53,11 @@ export class TaskItemComponent {
   }
 
   private initializeFields(): void {
-    this.editedTitle = this.task?.title || '';
-    this.editedDueDate = this.task?.dueDate ? new Date(this.task.dueDate) : null;
+    if (this.task) {
+      this.editedTitle = this.task.title || '';
+      this.editedDueDate = this.task.dueDate ? new Date(this.task.dueDate) : null;
+      this.editedPriority = this.task.priority || 'Medium';
+    }
   }
 
   toggleTask(): void {
@@ -80,6 +87,7 @@ export class TaskItemComponent {
     if (!this.editedTitle.trim() || !this.task?.id) return;
     this.task.title = this.editedTitle;
     this.task.dueDate = this.editedDueDate ? this.editedDueDate.toISOString() : null;
+    this.task.priority = this.editedPriority;
     this.taskService.updateTask(this.task).subscribe({
       next: () => {
         this.isEditing = false;

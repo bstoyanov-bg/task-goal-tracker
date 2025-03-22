@@ -62,7 +62,7 @@ export class GoalDetailComponent {
       title: this.newTaskTitle,
       isCompleted: false,
       goalId: this.goal.id,
-      // dueDate: String(new Date()),
+      priority: 'Medium',
       dueDate: this.newTaskDueDate ? this.newTaskDueDate.toISOString() : null,
     };
     this.taskService.createTask(task).subscribe({

@@ -46,10 +46,10 @@ public class TasksController : ControllerBase
 
         if (goal == null)
         {
-            //var allGoals = _context.Goals.Where(g => g.UserId == userId).ToList();
             return BadRequest("Invalid GoalId or unauthorized.");
         }
 
+        task.Priority = new[] { "Low", "Medium", "High" }.Contains(task.Priority) ? task.Priority : "Medium";
         _context.Tasks.Add(task);
         _context.SaveChanges();
         return StatusCode(201, new { task.Id, task.Title, task.IsCompleted, task.GoalId, task.DueDate });
@@ -75,6 +75,7 @@ public class TasksController : ControllerBase
         existingTask.DueDate = task.DueDate;
         existingTask.GoalId = task.GoalId;
         existingTask.DueDate = task.DueDate;
+        existingTask.Priority = new[] { "Low", "Medium", "High" }.Contains(task.Priority) ? task.Priority : existingTask.Priority;
 
         _context.SaveChanges();
         return NoContent();

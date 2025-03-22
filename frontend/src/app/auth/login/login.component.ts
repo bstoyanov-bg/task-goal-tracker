@@ -51,7 +51,7 @@ export class LoginComponent {
         this.router.navigate(['/goals']);
       },
       error: (err) => {
-        this.error = 'Login failed: ' + (err.error?.message || 'Email or\\and password are invalid!');
+        this.error = 'Login failed: ' + (err.error?.message || 'Email or/and password are invalid!');
       }
     });
   }
