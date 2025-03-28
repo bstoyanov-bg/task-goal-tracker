@@ -71,6 +71,7 @@ export class GoalDetailComponent {
     };
     this.taskService.createTask(task).subscribe({
       next: (newTask) => {
+        console.log('New task response:', newTask);
         if (!this.goal.tasks) this.goal.tasks = [];
         this.goal.tasks.push(newTask);
         this.newTaskTitle = '';

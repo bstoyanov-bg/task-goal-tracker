@@ -52,7 +52,7 @@ public class TasksController : ControllerBase
         task.Priority = new[] { "Low", "Medium", "High" }.Contains(task.Priority) ? task.Priority : "Medium";
         _context.Tasks.Add(task);
         _context.SaveChanges();
-        return StatusCode(201, new { task.Id, task.Title, task.IsCompleted, task.GoalId, task.DueDate });
+        return StatusCode(201, new { task.Id, task.Title, task.IsCompleted, task.GoalId, task.Priority, task.DueDate });
     }
 
     [HttpPut("{id}")]
