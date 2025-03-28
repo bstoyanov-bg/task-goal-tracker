@@ -44,6 +44,14 @@
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
+      <mat-form-field>
+        <mat-label>Priority</mat-label>
+        <mat-select [(ngModel)]="newTaskPriority">
+          <mat-option *ngFor="let priority of priorityOptions" [value]="priority">
+            {{ priority }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       <button mat-raised-button color="primary" (click)="createTask()">
         Add Task
       </button>

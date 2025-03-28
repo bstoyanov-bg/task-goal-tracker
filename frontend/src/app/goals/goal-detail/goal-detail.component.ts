@@ -11,6 +11,7 @@ import { Goal } from '../../Models/Goal';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-goal-detail',
@@ -24,6 +25,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
     MatProgressBarModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatSelectModule,
     FormsModule,
     TaskItemComponent
   ],
@@ -38,6 +40,8 @@ export class GoalDetailComponent {
   newTaskTitle: string = '';
   newTaskDueDate: Date | null = null;
   error: string | null = null;
+  newTaskPriority: string = 'Medium';
+  priorityOptions = ['Low', 'Medium', 'High'];
 
   constructor(
     private taskService: TaskService,
@@ -62,7 +66,7 @@ export class GoalDetailComponent {
       title: this.newTaskTitle,
       isCompleted: false,
       goalId: this.goal.id,
-      priority: 'Medium',
+      priority: this.newTaskPriority,
       dueDate: this.newTaskDueDate ? this.newTaskDueDate.toISOString() : null,
     };
     this.taskService.createTask(task).subscribe({
@@ -71,6 +75,7 @@ export class GoalDetailComponent {
         this.goal.tasks.push(newTask);
         this.newTaskTitle = '';
         this.newTaskDueDate = null;
+        this.newTaskPriority = 'Medium';
         this.error = null;
         this.taskChange.emit();
         this.cdr.detectChanges();
