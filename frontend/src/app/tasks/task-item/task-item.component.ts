@@ -8,8 +8,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDialog } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-task-item',
@@ -42,7 +44,8 @@ export class TaskItemComponent {
 
   constructor(
     private taskService: TaskService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -87,9 +90,19 @@ export class TaskItemComponent {
 
   deleteTask(): void {
     if (!this.task?.id) return;
-    this.taskService.deleteTask(this.task.id).subscribe({
-      next: () => this.delete.emit(this.task.id),
-      error: (err) => console.error('Failed to delete task:', err)
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '350px',
+      data: { taskTitle: this.task.title }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.taskService.deleteTask(this.task.id).subscribe({
+          next: () => this.delete.emit(this.task.id),
+          error: (err) => console.error('Failed to delete task:', err)
+        });
+      }
     });
   }
 
@@ -127,7 +140,6 @@ export class TaskItemComponent {
       const dueDate = new Date(this.task.dueDate);
       const currentDate = new Date();
       this.isOverdue = dueDate < currentDate;
-      console.log(`Task: ${this.task.title}, Due: ${this.task.dueDate}, Overdue: ${this.isOverdue}`);
     } else {
       this.isOverdue = false;
     }
