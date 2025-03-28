@@ -25,7 +25,6 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
-    // Optionally redirect to login
   }
 
   getToken(): string | null {
@@ -40,7 +39,7 @@ export class AuthService {
     const token = this.getToken();
     if (!token) return null;
     const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.sub; // Adjust based on your token's claim (e.g., 'email' or 'sub')
+    return payload.sub;
   }
 }
 

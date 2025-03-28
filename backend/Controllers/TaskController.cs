@@ -17,13 +17,6 @@ public class TasksController : ControllerBase
         _context = context;
     }
 
-    //[HttpGet]
-    //public IActionResult GetTasks()
-    //{
-    //    var tasks = _context.Tasks.ToList();
-    //    return Ok(tasks);
-    //}
-
     [HttpGet]
     public IActionResult GetTasks([FromQuery] int goalId)
     {

@@ -61,7 +61,7 @@ export class GoalDetailComponent {
       this.taskService.getTasks(this.goal.id).subscribe({
         next: (tasks) => {
           this.goal.tasks = tasks;
-          console.log('Loaded tasks:', this.goal.tasks); // Debug
+          console.log('Loaded tasks:', this.goal.tasks);
           this.cdr.detectChanges();
         },
         error: (err) => console.error('Failed to load tasks:', err)
