@@ -38,6 +38,7 @@ export class TaskItemComponent {
   editedDueDate: Date | null = null;
   editedPriority: string = 'Medium';
   priorityOptions = ['Low', 'Medium', 'High'];
+  isOverdue: boolean = false;
 
   constructor(
     private taskService: TaskService,
@@ -48,8 +49,21 @@ export class TaskItemComponent {
     this.initializeFields();
   }
 
+  ngAfterViewInit(): void {
+    this.checkOverdue();
+    this.cdr.detectChanges();
+  }
+
   ngOnChanges(): void {
     this.initializeFields();
+  }
+
+  @Input()
+  set taskInput(value: any) {
+    this.task = value;
+    this.initializeFields();
+    this.checkOverdue();
+    this.cdr.detectChanges();
   }
 
   private initializeFields(): void {
@@ -63,7 +77,10 @@ export class TaskItemComponent {
   toggleTask(): void {
     if (!this.task?.id) return;
     this.taskService.updateTask(this.task).subscribe({
-      next: () => this.update.emit(),
+      next: () => {
+        this.update.emit();
+        this.checkOverdue();
+      },
       error: (err) => console.error('Failed to update task:', err)
     });
   }
@@ -92,6 +109,7 @@ export class TaskItemComponent {
       next: () => {
         this.isEditing = false;
         this.update.emit();
+        this.checkOverdue();
         this.cdr.detectChanges();
       },
       error: (err) => console.error('Failed to save task:', err)
@@ -102,5 +120,16 @@ export class TaskItemComponent {
     this.isEditing = false;
     this.initializeFields();
     this.cdr.detectChanges();
+  }
+
+  private checkOverdue(): void {
+    if (this.task && this.task.dueDate && !this.task.isCompleted) {
+      const dueDate = new Date(this.task.dueDate);
+      const currentDate = new Date();
+      this.isOverdue = dueDate < currentDate;
+      console.log(`Task: ${this.task.title}, Due: ${this.task.dueDate}, Overdue: ${this.isOverdue}`);
+    } else {
+      this.isOverdue = false;
+    }
   }
 }

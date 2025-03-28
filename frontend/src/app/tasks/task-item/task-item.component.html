@@ -1,4 +1,4 @@
-<li *ngIf="task">
+<li *ngIf="task" [class.overdue]="isOverdue">
   <div *ngIf="!isEditing" class="task-display">
     <mat-checkbox [(ngModel)]="task.isCompleted" (change)="toggleTask()">
       {{ task.title }}

@@ -17,10 +17,20 @@ public class TasksController : ControllerBase
         _context = context;
     }
 
+    //[HttpGet]
+    //public IActionResult GetTasks()
+    //{
+    //    var tasks = _context.Tasks.ToList();
+    //    return Ok(tasks);
+    //}
+
     [HttpGet]
-    public IActionResult GetTasks()
+    public IActionResult GetTasks([FromQuery] int goalId)
     {
-        var tasks = _context.Tasks.ToList();
+        var userId = User.FindFirst("id")?.Value;
+        var tasks = _context.Tasks
+            .Where(t => t.GoalId == goalId && t.Goal.UserId == userId)
+            .ToList();
         return Ok(tasks);
     }
 

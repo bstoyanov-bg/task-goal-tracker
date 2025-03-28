@@ -19,8 +19,12 @@ export class TaskService {
     });
   }
 
-  getTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>(this.apiUrl, { headers: this.getHeaders() });
+  // getTasks(): Observable<Task[]> {
+  //   return this.http.get<Task[]>(this.apiUrl, { headers: this.getHeaders() });
+  // }
+
+  getTasks(goalId: number): Observable<Task[]> {
+    return this.http.get<Task[]>(`${this.apiUrl}?goalId=${goalId}`);
   }
 
   getTask(task: Task): Observable<Task> {

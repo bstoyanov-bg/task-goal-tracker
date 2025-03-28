@@ -10,6 +10,10 @@ li {
   &:hover {
     background-color: #f0f0f0;
   }
+  &.overdue {
+    background-color: #ffe6e6;
+    border-left: 4px solid #ff4d4d;
+  }
 }
 .task-display {
   display: flex;

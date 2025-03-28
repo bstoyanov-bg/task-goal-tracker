@@ -48,6 +48,27 @@ export class GoalDetailComponent {
     private cdr: ChangeDetectorRef
   ) { }
 
+  ngOnInit(): void {
+    this.loadTasks();
+  }
+
+  ngOnChanges(): void {
+    this.cdr.detectChanges();
+  }
+
+  private loadTasks(): void {
+    if (this.goal && this.goal.id) {
+      this.taskService.getTasks(this.goal.id).subscribe({
+        next: (tasks) => {
+          this.goal.tasks = tasks;
+          console.log('Loaded tasks:', this.goal.tasks); // Debug
+          this.cdr.detectChanges();
+        },
+        error: (err) => console.error('Failed to load tasks:', err)
+      });
+    }
+  }
+
   saveGoal(): void {
     this.update.emit(this.goal);
   }
